@@ -1,0 +1,349 @@
+
+/* HEADER FILE */
+
+//
+//  HugeInteger.h
+//  
+//
+//  Created by Marisa Schmidt on 9/8/14.
+//
+//
+
+#ifndef ____HugeInteger__
+#define ____HugeInteger__
+
+#include <iostream>
+#include <string>
+using namespace std;
+
+class HugeInteger
+{
+public:
+    HugeInteger (); //Default constructor, create an empty list (i.e., size is set to zero)
+    HugeInteger (int array[], int maxmimum); //constructor to set values
+    friend ostream& operator<<(ostream& output, const HugeInteger& op1); // display the content of the list
+    friend istream& operator>>(istream& input, HugeInteger& op2);
+    friend bool operator==(const HugeInteger& op1, const HugeInteger& op2);
+    friend bool operator!=(const HugeInteger& op1, const HugeInteger& op2);
+    friend bool operator>=(const HugeInteger& op1, const HugeInteger& op2);
+    friend bool operator<=(const HugeInteger& op1, const HugeInteger& op2);
+    friend HugeInteger operator+(const HugeInteger& op1, const HugeInteger& op2);
+    friend HugeInteger operator*(const HugeInteger& op1, const HugeInteger& op2);
+    //void operator =(const HugeInteger& op1);
+
+private:
+ 	static const int MAXIMUM=40;
+    int num[MAXIMUM]; //store he digits
+    int size; // how many digits so far
+    
+};
+
+
+
+#endif /* defined(____HugeInteger__) */
+
+
+
+
+
+/* MAIN FILE */
+
+//
+//  HugeInteger.cpp
+//  
+//
+//  Created by Marisa Schmidt on 9/8/14.
+//
+//
+
+#include "HugeInteger.h"
+#include "assert.h"
+#include <iostream>
+#include <string>
+using namespace std;
+
+
+int main()
+{
+    
+//BEGIN USER INPUT
+    
+    // testing default constructor, create new number
+    HugeInteger operand3;
+    HugeInteger operand4;
+ 
+    //add or multipy user's numbers
+    char op;
+   
+    cout << "\nHello! This program allows you to add or multiply two integers of your choice of length, and then compare them. \nPlease enter your equation: " << endl;
+    cin >> operand3 >> op >> operand4;
+    cout << "\nThe equation you entered was " << operand3 << op << operand4 << endl;
+        if (op=='+')
+        {
+            HugeInteger result;
+            result = operand3 + operand4;
+            cout << "The sum of both integers are ";
+            cout << result << endl;
+        }
+        else if (op=='*')
+        {
+            HugeInteger result;
+            result = (operand3 * operand4);
+            cout << "the multiplication of both integers equals ";
+            cout << result << endl;
+        }
+        else if ((op!='+')||(op!='*'))
+        {
+            cout << "impossible calculation for this program" << endl;
+        }
+    
+    
+    //comparisons
+    //equivalent?
+    if (operand3==operand4)
+    {
+        cout << operand3 << " and " << operand4 << " are equal." << endl;
+    }
+    else
+        cout << operand3 << " and " << operand4 << " are not equal." << endl;
+    
+    
+    //greater than/equal to?
+    if (operand3>=operand4)
+    {
+        cout << operand3 << " is greater than or equal to " << operand4 << "."<< endl;
+    }
+    
+    //less than/equal to?
+    else if (operand3<=operand4)
+    {
+        cout << operand3 << " is less than or equal to " << operand4 <<"."<< endl;
+    }
+   
+    //zero?
+    HugeInteger zero(0,0);
+    if (operand3==zero)
+        cout << operand3 << " is zero." << endl;
+    else if (operand3!=zero)
+        cout << operand3 << " is not zero." << endl;
+    
+    if (operand4==zero)
+        cout << operand4 << " is zero." << endl;
+    else if (operand4!=zero)
+        cout << operand4 << " is not zero." << endl; 
+     
+}
+        
+
+
+
+
+
+
+
+//FUNCTION DEFINITIONS
+
+
+HugeInteger::HugeInteger() {
+    int c;
+    for (int i=0; i < MAXIMUM; i++){
+        int c=0;
+        num[i] = c;
+    }
+    
+}
+
+HugeInteger::HugeInteger(int numbers[], int SIZE){
+    assert (SIZE<=MAXIMUM);
+    size = SIZE;
+    
+    for (int i=0; i < SIZE; i++)
+        num[i]=numbers[i];
+    
+}
+
+
+//input output overload functions
+
+ostream& operator<<(ostream& output, const HugeInteger& a){
+    int j=0;
+    int temp=1;
+    if (temp==1)
+    {
+        for (int i = 0; i < a.MAXIMUM; i++){
+            if (a.num[i]!=0){
+                j=i;
+                temp++;
+                break;
+            }
+        }
+    }
+    for (int k = j; k < a.MAXIMUM; k++) {
+    output << a.num[k];
+    }
+
+    return(output);
+
+}
+
+
+
+istream& operator>>(istream& input, HugeInteger& a){
+ string number;
+ input >> number;
+ a.size = number.length();
+ 
+ for (int i=a.size-1, j=a.MAXIMUM-1; i>=0; i--, j--)
+    {
+        char obj1 = number[i];
+        int temp = atoi (&obj1);
+        a.num[j] = temp;
+    }
+ return(input);
+ }
+
+
+
+//operator overload functions
+
+bool operator==(const HugeInteger& a, const HugeInteger& b){
+    bool equal = true;
+    for (int i=0; i < a.MAXIMUM; i++)
+    {
+        if (a.num[i] != b.num[i])
+        {
+            equal = false;
+            break;
+        }
+        
+    }
+    return (equal);
+    
+}
+
+
+bool operator!=(const HugeInteger& a, const HugeInteger& b){
+    bool equal = true;
+    for (int i=0; i < a.MAXIMUM; i++)
+    {
+        if (a.num[i] != b.num[i])
+            equal = false;
+            break;
+    }
+    return (equal);
+    
+}
+
+
+
+bool operator>=(const HugeInteger& a, const HugeInteger& b){
+    bool greater_equal=true;
+    int d=0;
+    
+    if (a.size>b.size){
+        greater_equal=true;
+    }
+    
+    else {
+    for (int i=0; i < a.MAXIMUM; i++)
+    {
+        if ((a.num[i] < b.num[i])||(a.num[i]!=b.num[i])||(a.num[i]!=d))
+        {
+            greater_equal = false;
+        }
+        else if ((a.num[i] > b.num[i])||(a.num[i]==b.num[i])||(a.num[i]==d))
+        {
+            greater_equal=true;
+        }
+    }
+    }
+    return (greater_equal);
+}
+
+
+
+bool operator<=(const HugeInteger& a, const HugeInteger& b){
+    bool less_equal=true;
+    int d=0;
+    
+    if (a.size<b.size){
+        less_equal=true;
+    }
+    else {
+    for (int i=0; i < a.MAXIMUM; i++)
+    {
+        if ((a.num[i] > b.num[i])||(a.num[i]==b.num[i])||(a.num[i]==d))
+        {
+            less_equal = false;
+        }
+        else if ((a.num[i] < b.num[i])||(a.num[i]!=b.num[i])||(a.num[i]!=d))
+        {
+            less_equal=true;
+        }
+    }
+    }
+    return (less_equal);
+}
+
+
+HugeInteger operator+ (const HugeInteger& a, const HugeInteger& b) {
+    {
+        int carry = 0;
+        HugeInteger res;
+        if (a.size >= b.size)
+        {
+            res.size = a.size;
+        }
+        else if (a.size < b.size)
+        {
+            res.size = b.size;
+        }
+        
+        for(int i = a.MAXIMUM - 1; i>=0; i--)
+                {
+                    res.num[i] = a.num[i] + b.num[i] + carry;
+                    carry = 0;
+                    
+                    if (res.num[i] >= 10)
+                    {
+                        carry=1;
+                        res.num[i] -= 10;
+                        
+                        res.size++;
+
+                    }
+                }
+        return (res);
+    }
+}
+
+ 
+
+HugeInteger operator*(const HugeInteger& a, const HugeInteger& b){
+    HugeInteger total;
+    int shift=0;
+    
+    for(int i = a.MAXIMUM - 1, offset=0; i>=0; i--, offset++)
+    {
+        
+        int carry=0;
+        HugeInteger res;
+        
+        for (int j = a.MAXIMUM - 1; j>=0; j--)
+        {
+            int k = j-offset;
+            res.num[k] = a.num[j] * b.num[i] + carry;
+            
+            carry=res.num[k]/10;
+            res.num[k]=res.num[k]%10;
+        
+        
+        }
+       
+        total = total + res;
+        
+    }
+    
+    return (total);
+}
+
